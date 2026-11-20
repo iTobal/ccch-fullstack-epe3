@@ -1,0 +1,161 @@
+<section class="proyectos-admin">
+  <h2>Administración de Proyectos de Investigación</h2>
+
+  <div class="acciones-superiores">
+    <button type="button" (click)="abrirNuevoProyecto()">Nuevo proyecto</button>
+    <button type="button" (click)="cargarProyectos()">Actualizar lista</button>
+    <button type="button" (click)="exportarXml()">Exportar proyectos XML</button>
+  </div>
+
+  <p *ngIf="cargando">Cargando...</p>
+  <p *ngIf="mensajeExito">{{ mensajeExito }}</p>
+  <p *ngIf="mensajeError">{{ mensajeError }}</p>
+
+  <form *ngIf="mostrarFormulario" (ngSubmit)="guardarProyecto()">
+    <h3>{{ editandoId !== null ? 'Editar proyecto' : 'Crear proyecto' }}</h3>
+
+    <div>
+      <label for="codigo">Código</label>
+      <input
+        id="codigo"
+        name="codigo"
+        type="text"
+        [(ngModel)]="formulario.codigo"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="titulo">Título</label>
+      <input
+        id="titulo"
+        name="titulo"
+        type="text"
+        [(ngModel)]="formulario.titulo"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="area_cientifica">Área científica</label>
+      <select
+        id="area_cientifica"
+        name="area_cientifica"
+        [(ngModel)]="formulario.area_cientifica"
+        required
+      >
+        <option *ngFor="let area of areasCientificas" [value]="area">
+          {{ area }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label for="resumen">Resumen</label>
+      <textarea
+        id="resumen"
+        name="resumen"
+        [(ngModel)]="formulario.resumen"
+        required
+      ></textarea>
+    </div>
+
+    <div>
+      <label for="investigador_principal">ID Investigador principal</label>
+      <input
+        id="investigador_principal"
+        name="investigador_principal"
+        type="number"
+        [(ngModel)]="formulario.investigador_principal"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="estado">Estado</label>
+      <select
+        id="estado"
+        name="estado"
+        [(ngModel)]="formulario.estado"
+        required
+      >
+        <option *ngFor="let estado of estadosProyecto" [value]="estado">
+          {{ estado }}
+        </option>
+      </select>
+    </div>
+
+    <div>
+      <label for="presupuesto_clp">Presupuesto (CLP)</label>
+      <input
+        id="presupuesto_clp"
+        name="presupuesto_clp"
+        type="number"
+        [(ngModel)]="formulario.presupuesto_clp"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="fecha_inicio">Fecha inicio</label>
+      <input
+        id="fecha_inicio"
+        name="fecha_inicio"
+        type="date"
+        [(ngModel)]="formulario.fecha_inicio"
+        required
+      />
+    </div>
+
+    <div>
+      <label for="fecha_termino">Fecha término</label>
+      <input
+        id="fecha_termino"
+        name="fecha_termino"
+        type="date"
+        [(ngModel)]="formulario.fecha_termino"
+      />
+    </div>
+
+    <button type="submit">Guardar</button>
+    <button type="button" (click)="cancelarFormulario()">Cancelar</button>
+  </form>
+
+  <table *ngIf="proyectos.length > 0; else sinProyectos">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Título</th>
+        <th>Área</th>
+        <th>Investigador</th>
+        <th>Estado</th>
+        <th>Presupuesto CLP</th>
+        <th>Inicio</th>
+        <th>Término</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let proyecto of proyectos">
+        <td>{{ proyecto.codigo }}</td>
+        <td>{{ proyecto.titulo }}</td>
+        <td>{{ proyecto.area_display || proyecto.area_cientifica }}</td>
+        <td>
+          {{ proyecto.investigador_principal_nombre || proyecto.investigador_principal }}
+        </td>
+        <td>{{ proyecto.estado_display || proyecto.estado }}</td>
+        <td>{{ proyecto.presupuesto_clp }}</td>
+        <td>{{ proyecto.fecha_inicio }}</td>
+        <td>{{ proyecto.fecha_termino || '-' }}</td>
+        <td>
+          <button type="button" (click)="editarProyecto(proyecto)">Editar</button>
+          <button type="button" (click)="eliminarProyecto(proyecto.id)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <ng-template #sinProyectos>
+    <p *ngIf="!cargando">No hay proyectos registrados todavía.</p>
+  </ng-template>
+</section>

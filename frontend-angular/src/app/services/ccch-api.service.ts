@@ -14,17 +14,19 @@ export interface Investigador {
 }
 
 export interface ProyectoInvestigacion {
-  id: number;
+  id?: number;
   codigo: string;
   titulo: string;
   area_cientifica: string;
-  area_display: string;
+  area_display?: string;
   resumen: string;
-  investigador_principal: string;
+  investigador_principal: number;
+  investigador_principal_nombre?: string;
   estado: string;
-  estado_display: string;
+  estado_display?: string;
   presupuesto_clp: number;
   fecha_inicio: string;
+  fecha_termino: string | null;
 }
 
 export interface PublicacionCientifica {
@@ -68,6 +70,50 @@ export class CcchApiService {
     return this.http.post<{ ok: boolean; id: number; mensaje: string }>(
       `${this.apiBaseUrl}/solicitudes/`,
       payload
+    );
+  }
+
+  obtenerProyectos(): Observable<ProyectoInvestigacion[]> {
+    return this.http.get<ProyectoInvestigacion[]>(
+      `${this.apiBaseUrl}/proyectos/`
+    );
+  }
+
+  obtenerProyecto(id: number): Observable<ProyectoInvestigacion> {
+    return this.http.get<ProyectoInvestigacion>(
+      `${this.apiBaseUrl}/proyectos/${id}/`
+    );
+  }
+
+  crearProyecto(
+    proyecto: ProyectoInvestigacion
+  ): Observable<ProyectoInvestigacion> {
+    return this.http.post<ProyectoInvestigacion>(
+      `${this.apiBaseUrl}/proyectos/`,
+      proyecto
+    );
+  }
+
+  actualizarProyecto(
+    id: number,
+    proyecto: Partial<ProyectoInvestigacion>
+  ): Observable<ProyectoInvestigacion> {
+    return this.http.patch<ProyectoInvestigacion>(
+      `${this.apiBaseUrl}/proyectos/${id}/`,
+      proyecto
+    );
+  }
+
+  eliminarProyecto(id: number): Observable<void> {
+    return this.http.delete<void>(
+      `${this.apiBaseUrl}/proyectos/${id}/`
+    );
+  }
+
+  exportarProyectosXml(): Observable<Blob> {
+    return this.http.get(
+      `${this.apiBaseUrl}/proyectos/exportar.xml`,
+      { responseType: 'blob' }
     );
   }
 }
