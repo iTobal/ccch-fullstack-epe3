@@ -60,7 +60,7 @@ export interface NuevaSolicitudPayload {
 })
 export class CcchApiService {
   private readonly http = inject(HttpClient);
-  private readonly apiBaseUrl = 'http://127.0.0.1:8000/api';
+  private readonly apiBaseUrl = 'https://ccch-fullstack-epe3.onrender.com/api';
 
   obtenerResumen(): Observable<ResumenCcchResponse> {
     return this.http.get<ResumenCcchResponse>(`${this.apiBaseUrl}/resumen/`);
